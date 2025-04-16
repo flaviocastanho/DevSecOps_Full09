@@ -1,0 +1,38 @@
+name: Build, Test and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+      - name: Build (echo)
+        run: npm run build
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+      - name: Instalar dependências
+        run: npm install
+      - name: Rodar testes
+        run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+      - name: Deploy para GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public

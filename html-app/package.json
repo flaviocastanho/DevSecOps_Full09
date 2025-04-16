@@ -1,0 +1,12 @@
+{
+  "name": "html-app",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "echo 'Nada para buildar em HTML puro'",
+    "test": "jest",
+    "deploy": "echo 'deploy feito pelo GitHub Actions'"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
