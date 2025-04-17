@@ -59,7 +59,7 @@ jobs:
           unzip sonar-scanner.zip
           ./sonar-scanner-*/bin/sonar-scanner \
             -Dsonar.projectKey=873a2f4ec7b521df532d796f5fb4fa0016ba6f01 \
-            -Dsonar.organization=SEU_ORGANIZATION (só para SonarCloud) \
+            -Dsonar.organization=SONAR_TOKEN (só para SonarCloud) \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
