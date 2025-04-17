@@ -41,46 +41,23 @@ jobs:
           publish_dir: ./public
 
   sonarqube:
-    name: SonarQube Analysis
+    name: Build e Análise SonarCloud
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java (se necessário)
+      - name: Configurar Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17' # ou a versão que seu projeto usa
+          java-version: '17' # Ou a versão do seu projeto
+          distribution: 'temurin' # ou adopt, zulu...
 
-      - name: SonarQube Scan
+      - name: Build com Maven e Análise no SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonar-scanner.zip
-          ./sonar-scanner-*/bin/sonar-scanner \
-            -Dsonar.projectKey=873a2f4ec7b521df532d796f5fb4fa0016ba6f01 \
-            -Dsonar.organization=ProjetoFinalSonar (só para SonarCloud) \
-            -Dsonar.sources=. \
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=SEU_PROJECT_KEY \
+            -Dsonar.organization=SUA_ORGANIZATION_ID \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN         
-  # sonarqube:
-  #   name: Build e Análise SonarCloud
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-
-  #     - name: Configurar Java
-  #       uses: actions/setup-java@v3
-  #       with:
-  #         java-version: '17' # Ou a versão do seu projeto
-  #         distribution: 'temurin' # ou adopt, zulu...
-
-  #     - name: Build com Maven e Análise no SonarCloud
-  #       env:
-  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  #       run: |
-  #         mvn clean verify sonar:sonar \
-  #           -Dsonar.projectKey=SEU_PROJECT_KEY \
-  #           -Dsonar.organization=SUA_ORGANIZATION_ID \
-  #           -Dsonar.host.url=https://sonarcloud.io \
-  #           -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=$SONAR_TOKEN
