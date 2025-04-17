@@ -40,31 +40,26 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
 
-# code-analisys:
-#   runs-on: ubuntu-latest
-#   needs: build
-#   steps:
-#   - uses: actions/checkout@v2
-#     with:
-#       fetch-depth: 0
-#   - name: Set up JDK 11
-#     uses: actions/setup-java@v1
-#     with:
-#       java-version: 11
-#   - name: Cache SonarCloud packages
-#   uses: actions/cache@v1
-#   with:
-#     path: ~/.sonar/cache
-#     key: ${{ runner.os }}-sonar
-#     restore-keys: ${{ runner.os }}-sonar
-#   - name: Cache Maven packages
-#     uses: actions/cache@v1
-#     with:
-#       path: ~/.m2
-#       key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#       restore-keys: ${{ runner.os }}-m2
-#   - name: Build and analyze
-#   env:        
-#   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PRinformation, if any
-#   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#   run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey= seu projeto            
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java (se necessário)
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17' # ou a versão que seu projeto usa
+
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          unzip sonar-scanner.zip
+          ./sonar-scanner-*/bin/sonar-scanner \
+            -Dsonar.projectKey=873a2f4ec7b521df532d796f5fb4fa0016ba6f01 \
+            -Dsonar.organization=SEU_ORGANIZATION (só para SonarCloud) \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=$SONAR_TOKEN
